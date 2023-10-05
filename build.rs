@@ -129,7 +129,12 @@ fn linker_options() {
 #[cfg(feature = "static")]
 fn linker_options() {
     println!("cargo:rustc-link-lib=static=ftd2xx");
-    println!("cargo:rustc-link-lib=dylib=usb-1.0");
+    if env::var("TARGET").unwrap() == "armv7-unknown-linux-musleabihf" {
+        println!("cargo:rustc-link-lib=static=usb-1.0musl");
+        println!("cargo:rustc-link-lib=static=gcc");
+    } else {
+        println!("cargo:rustc-link-lib=dylib=usb-1.0");
+    }
 
     match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
         "windows" => {}
